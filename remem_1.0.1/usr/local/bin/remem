@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+# remem
+__version__ = "1.0.0"
+
+import sys
+import time
+import subprocess
+import re
+
+def parse_time(time_str):
+    match = re.match(r"(\d*\.?\d+)([mhs])", time_str)
+    if not match:
+        print("Invalid time format. Use e.g. 30m, 1.5h")
+        sys.exit(1)
+
+    value, unit = match.groups()
+    value = float(value)
+
+    if unit == 'm':
+        return int(value * 60)
+    elif unit == 'h':
+        return int(value * 3600)
+    elif unit == 's':
+        return int(value * 1)
+
+def notify(message):
+    subprocess.run(["notify-send", "--app-name=remem", "Reminder", message])
+
+def main():
+    if "--version" in sys.argv:
+        print(f"remem version {__version__}")
+        sys.exit(0)
+
+    if len(sys.argv) < 4 or sys.argv[1] != 'add':
+        print("Usage: remem add \"<message>\" <interval>[m/h]")
+        sys.exit(1)
+
+    message = sys.argv[2]
+    interval = parse_time(sys.argv[3])
+
+    print(f"⏰ Reminder set: '{message}' every {interval // 60} minute(s)")
+    try:
+        while True:
+            time.sleep(interval)
+            notify(message)
+    except KeyboardInterrupt:
+        print("\nReminder cancelled.")
+
+if __name__ == "__main__":
+    main()

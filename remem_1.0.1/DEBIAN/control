@@ -1,0 +1,8 @@
+Package: remem
+Version: 1.0.1
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3, libnotify-bin
+Maintainer: Divyansh Modi
+Description: CLI reminder tool with desktop notifications.
